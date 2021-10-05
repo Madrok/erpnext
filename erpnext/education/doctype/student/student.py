@@ -9,13 +9,26 @@ from frappe import _
 from frappe.desk.form.linked_with import get_linked_doctypes
 from frappe.model.document import Document
 from frappe.utils import getdate, today
+from frappe.utils import (
+	#cint,
+	comma_and,
+	#cstr,
+	getdate,
+	#has_gravatar,
+	today,
+	#nowdate,
+	validate_email_address,
+)
 
 from erpnext.education.utils import check_content_completion, check_quiz_completion
 
 
 class Student(Document):
 	def validate(self):
-		self.title = " ".join(filter(None, [self.first_name, self.middle_name, self.last_name]))
+		alias = ""
+		if self.nickname:
+			alias = "(" + self.nickname + ")"
+		self.title = " ".join(filter(None, [self.first_name, alias, self.middle_name, self.last_name]))
 		self.validate_dates()
 
 		if self.student_applicant:
@@ -24,6 +37,11 @@ class Student(Document):
 
 		if frappe.get_value("Student", self.name, "title") != self.title:
 			self.update_student_name_in_linked_doctype()
+
+		if self.student_email_id:
+			#if not self.flags.ignore_email_validation:
+			validate_email_address(self.student_email_id, throw=True)
+			self.check_email_id_is_unique()
 
 	def validate_dates(self):
 		for sibling in self.siblings:
@@ -58,6 +76,16 @@ class Student(Document):
 		student = frappe.db.sql("select name from `tabStudent` where student_applicant=%s and name!=%s", (self.student_applicant, self.name))
 		if student:
 			frappe.throw(_("Student {0} exist against student applicant {1}").format(student[0][0], self.student_applicant))
+
+	def check_email_id_is_unique(self):
+		if self.student_email_id:
+			# validate email is unique
+			duplicate_emails = frappe.get_all("Student", filters={"student_email_id": self.student_email_id, "name": ["!=", self.name]}, fields=['name','title'])
+			duplicate_emails = [student.title for student in duplicate_emails]
+
+			if duplicate_emails:
+				frappe.throw(_("Email Address must be unique, already exists for {0}")
+					.format(comma_and(duplicate_emails)), frappe.DuplicateEntryError)
 
 	def after_insert(self):
 		if not frappe.get_single('Education Settings').get('user_creation_skip'):

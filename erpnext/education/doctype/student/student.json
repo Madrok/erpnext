@@ -12,6 +12,7 @@
   "enabled",
   "section_break_3",
   "first_name",
+  "nickname",
   "middle_name",
   "last_name",
   "user",
@@ -44,7 +45,8 @@
   "leaving_certificate_number",
   "column_break_31",
   "reason_for_leaving",
-  "title"
+  "title",
+  "section_break_health"
  ],
  "fields": [
   {
@@ -250,11 +252,21 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Title"
+  },
+  {
+   "fieldname": "section_break_health",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "If the student goes by a name other than their legal name, insert that here.",
+   "fieldname": "nickname",
+   "fieldtype": "Data",
+   "label": "Nickname"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2020-09-07 19:28:08.914568",
+ "modified": "2021-10-04 19:23:31.197642",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

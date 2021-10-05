@@ -18,7 +18,9 @@
   "web_academy_settings_section",
   "enable_lms",
   "portal_title",
-  "description"
+  "description",
+  "email_settings_section",
+  "student_email_domain"
  ],
  "fields": [
   {
@@ -103,11 +105,21 @@
    "fieldname": "user_creation_skip",
    "fieldtype": "Check",
    "label": "Skip User creation for new Student"
+  },
+  {
+   "fieldname": "student_email_domain",
+   "fieldtype": "Data",
+   "label": "Student Email Domain"
+  },
+  {
+   "fieldname": "email_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Email Settings"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-05-07 19:18:10.639356",
+ "modified": "2021-10-05 12:23:26.896464",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",
